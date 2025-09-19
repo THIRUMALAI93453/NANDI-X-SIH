@@ -30,15 +30,13 @@ const mockAnalyzeImage = (file: File): Promise<AnalysisResult> => {
         'monkey', 'bear', 'wolf', 'fox', 'snake', 'lizard', 'frog'
       ];
       
-      // Check if filename contains any non-cattle animal names (for demo purposes)
+      // Check if filename contains any non-cattle animal names
       const hasNonCattleAnimal = nonCattleAnimals.some(animal => 
         fileName.includes(animal)
       );
       
-      // Randomly simulate non-cattle detection (30% chance for demo)
-      const isNonCattleAnimal = hasNonCattleAnimal || Math.random() < 0.3;
-      
-      if (isNonCattleAnimal) {
+      // Only reject if it's actually a non-cattle animal
+      if (hasNonCattleAnimal) {
         reject(new Error('INVALID_ANIMAL'));
         return;
       }
