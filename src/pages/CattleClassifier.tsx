@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Scan, 
   Brain, 
@@ -13,14 +14,36 @@ import {
   Award,
   Users,
   TrendingUp,
-  CheckCircle
+  CheckCircle,
+  AlertTriangle
 } from 'lucide-react';
 
 // Mock analysis function - in real app this would call your AI service
 const mockAnalyzeImage = (file: File): Promise<AnalysisResult> => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
-      // Simulate different results based on file name or random
+      // Simulate animal detection - check if image contains non-cattle/buffalo animals
+      const fileName = file.name.toLowerCase();
+      const nonCattleAnimals = [
+        'dog', 'cat', 'horse', 'pig', 'sheep', 'goat', 'chicken', 'duck', 
+        'elephant', 'lion', 'tiger', 'bird', 'fish', 'rabbit', 'deer',
+        'monkey', 'bear', 'wolf', 'fox', 'snake', 'lizard', 'frog'
+      ];
+      
+      // Check if filename contains any non-cattle animal names (for demo purposes)
+      const hasNonCattleAnimal = nonCattleAnimals.some(animal => 
+        fileName.includes(animal)
+      );
+      
+      // Randomly simulate non-cattle detection (30% chance for demo)
+      const isNonCattleAnimal = hasNonCattleAnimal || Math.random() < 0.3;
+      
+      if (isNonCattleAnimal) {
+        reject(new Error('INVALID_ANIMAL'));
+        return;
+      }
+      
+      // Simulate different results for valid cattle/buffalo images
       const mockResults: AnalysisResult[] = [
         {
           breed: { name: 'Holstein Friesian', confidence: 0.94, category: 'Cattle' },
@@ -63,16 +86,23 @@ const mockAnalyzeImage = (file: File): Promise<AnalysisResult> => {
 const CattleClassifier: React.FC = () => {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleImageUpload = async (file: File) => {
     setIsAnalyzing(true);
     setAnalysisResult(null);
+    setError(null);
     
     try {
       const result = await mockAnalyzeImage(file);
       setAnalysisResult(result);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Analysis failed:', error);
+      if (error.message === 'INVALID_ANIMAL') {
+        setError('⚠️ Invalid Animal Detected! This app only analyzes cattle and buffalo images. Please upload an image containing cattle or buffalo.');
+      } else {
+        setError('Analysis failed. Please try again with a different image.');
+      }
     } finally {
       setIsAnalyzing(false);
     }
@@ -81,6 +111,7 @@ const CattleClassifier: React.FC = () => {
   const resetAnalysis = () => {
     setAnalysisResult(null);
     setIsAnalyzing(false);
+    setError(null);
   };
 
   return (
@@ -156,8 +187,18 @@ const CattleClassifier: React.FC = () => {
             <Separator className="my-8" />
 
             {/* Upload Section */}
-            <div className="animate-scale-in">
+            <div className="animate-scale-in space-y-4">
               <ImageUpload onImageUpload={handleImageUpload} isAnalyzing={isAnalyzing} />
+              
+              {/* Error Display */}
+              {error && (
+                <Alert className="border-red-500 bg-red-50 dark:bg-red-950">
+                  <AlertTriangle className="h-4 w-4 text-red-600" />
+                  <AlertDescription className="text-red-700 dark:text-red-300 font-medium">
+                    {error}
+                  </AlertDescription>
+                </Alert>
+              )}
             </div>
 
             {/* Statistics Section */}
