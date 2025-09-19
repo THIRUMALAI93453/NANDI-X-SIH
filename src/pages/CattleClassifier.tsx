@@ -94,7 +94,7 @@ const CattleClassifier: React.FC = () => {
                 <Scan className="h-8 w-8 text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-foreground">CattleAI</h1>
+                <h1 className="text-3xl font-bold text-foreground">NANDI X</h1>
                 <p className="text-muted-foreground">Advanced Livestock Classification</p>
               </div>
             </div>
@@ -201,7 +201,7 @@ const CattleClassifier: React.FC = () => {
       <footer className="border-t border-border bg-card mt-16">
         <div className="container mx-auto px-4 py-6">
           <div className="text-center text-muted-foreground">
-            <p>&copy; 2024 CattleAI. Advanced livestock classification technology.</p>
+            <p>&copy; 2024 NANDI X. All rights reserved to THIRUMALAI. Advanced livestock classification technology.</p>
           </div>
         </div>
       </footer>
