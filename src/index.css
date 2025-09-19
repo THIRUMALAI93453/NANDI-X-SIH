@@ -2,39 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Cattle Classification App Design System - Agricultural Tech Aesthetic */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 45 20% 97%;
+    --foreground: 25 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 25 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 25 15% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Agricultural green primary with tech blue accent */
+    --primary: 142 76% 36%;
+    --primary-foreground: 0 0% 98%;
+    --primary-hover: 142 76% 32%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Warm earth secondary */
+    --secondary: 35 25% 92%;
+    --secondary-foreground: 25 15% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted earth tones */
+    --muted: 40 15% 94%;
+    --muted-foreground: 25 10% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Tech blue accent */
+    --accent: 210 100% 56%;
+    --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 35 20% 88%;
+    --input: 35 20% 88%;
+    --ring: 142 76% 36%;
+
+    /* Custom gradients for agricultural tech theme */
+    --gradient-primary: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 42%));
+    --gradient-hero: linear-gradient(135deg, hsl(142 76% 36%), hsl(210 100% 56%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(35 25% 98%));
+    
+    /* Shadows with agricultural theme */
+    --shadow-soft: 0 2px 8px hsl(25 15% 15% / 0.08);
+    --shadow-medium: 0 4px 16px hsl(25 15% 15% / 0.12);
+    --shadow-strong: 0 8px 32px hsl(25 15% 15% / 0.16);
+    --shadow-glow: 0 0 20px hsl(142 76% 36% / 0.3);
 
     --radius: 0.5rem;
 
