@@ -6,15 +6,62 @@ import { Card } from '@/components/ui/card';
 
 interface ImageUploadProps {
   onImageUpload: (file: File) => void;
+  onValidationError: (error: string) => void;
   isAnalyzing: boolean;
 }
 
-export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, isAnalyzing }) => {
+export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, onValidationError, isAnalyzing }) => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const validateFile = (file: File): { valid: boolean; error?: string } => {
+    // Size validation - enforce 10MB limit
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+    if (file.size > MAX_SIZE) {
+      return { valid: false, error: 'File size exceeds 10MB limit' };
+    }
+    
+    // Type validation - strict MIME type checking
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      return { valid: false, error: 'Invalid file type. Only JPG, PNG, and WEBP are allowed.' };
+    }
+    
+    return { valid: true };
+  };
+
+  const validateImageContent = async (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        resolve(true);
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve(false);
+      };
+      img.src = url;
+    });
+  };
+
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (file) {
+      // Client-side validation
+      const validation = validateFile(file);
+      if (!validation.valid) {
+        onValidationError(validation.error || 'File validation failed');
+        return;
+      }
+
+      // Validate actual image content
+      const isValidImage = await validateImageContent(file);
+      if (!isValidImage) {
+        onValidationError('File is not a valid image or is corrupted');
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = () => {
         setPreviewImage(reader.result as string);
@@ -22,7 +69,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload, isAnaly
       reader.readAsDataURL(file);
       onImageUpload(file);
     }
-  }, [onImageUpload]);
+  }, [onImageUpload, onValidationError]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

@@ -106,6 +106,10 @@ const CattleClassifier: React.FC = () => {
     }
   };
 
+  const handleValidationError = (errorMessage: string) => {
+    setError(errorMessage);
+  };
+
   const resetAnalysis = () => {
     setAnalysisResult(null);
     setIsAnalyzing(false);
@@ -186,7 +190,11 @@ const CattleClassifier: React.FC = () => {
 
             {/* Upload Section */}
             <div className="animate-scale-in space-y-4">
-              <ImageUpload onImageUpload={handleImageUpload} isAnalyzing={isAnalyzing} />
+              <ImageUpload 
+                onImageUpload={handleImageUpload} 
+                onValidationError={handleValidationError}
+                isAnalyzing={isAnalyzing} 
+              />
               
               {/* Error Display */}
               {error && (
