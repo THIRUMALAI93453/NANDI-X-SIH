@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ImageUpload } from '@/components/ImageUpload';
 import { AnalysisResults, AnalysisResult } from '@/components/AnalysisResults';
+import { isCattleOrBuffalo } from '@/lib/animalGuard';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -92,6 +93,13 @@ const CattleClassifier: React.FC = () => {
     setError(null);
     
     try {
+      // On-device guard: only allow cattle/buffalo images
+      const guard = await isCattleOrBuffalo(file);
+      if (!guard.ok) {
+        setError('Only cattle or buffalo images are allowed. Please upload a valid cattle/buffalo photo.');
+        return;
+      }
+
       const result = await mockAnalyzeImage(file);
       setAnalysisResult(result);
     } catch (error: any) {
